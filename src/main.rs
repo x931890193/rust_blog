@@ -87,31 +87,3 @@ async fn main() -> std::io::Result<()> {
         .run()
         .await
 }
-
-#[cfg(test)]
-mod tests {
-    use actix_web::{body::to_bytes, dev::Service, http, test, web, App};
-
-    use super::*;
-
-    #[actix_web::test]
-    async fn test_index() {
-        let app =
-            test::init_service(App::new().service(web::resource("/").route(web::post().to(index))))
-                .await;
-
-        let req = test::TestRequest::post()
-            .uri("/")
-            .set_json(&Greet {
-                msg: "my-name".to_owned(),
-                server_time: String::from(""),
-            })
-            .to_request();
-        let resp = app.call(req).await.unwrap();
-
-        assert_eq!(resp.status(), http::StatusCode::OK);
-
-        let body_bytes = to_bytes(resp.into_body()).await.unwrap();
-        assert_eq!(body_bytes, r##"{"name":"my-name","number":43}"##);
-    }
-}
