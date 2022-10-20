@@ -1,5 +1,5 @@
-mod routers;
 mod handlers;
+mod routers;
 mod db;
 
 use actix_web::{middleware, App, HttpServer};
