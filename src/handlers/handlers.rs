@@ -1,6 +1,9 @@
-use actix_web::{HttpResponse, };
+use actix_protobuf::{ProtoBufResponseBuilder as _};
+use actix_web::{HttpResponse, Result};
 use serde::{Deserialize, Serialize};
 use chrono::{Local};
+use crate::proto::pb;
+
 
 #[derive(Debug, Serialize, Deserialize)]
 struct Greet {
@@ -16,4 +19,9 @@ pub async fn index() -> HttpResponse {
         server_time: Local::now().format(fmt).to_string().to_owned()
     };
     HttpResponse::Ok().json(resp) // <- send response
+}
+
+pub async fn base_resp() -> Result<HttpResponse> {
+    let base = pb::BaseResp{ code: 111111, msg: "111111111".to_string() };
+    HttpResponse::Ok().protobuf(base)
 }

@@ -1,6 +1,7 @@
 mod handlers;
 mod routers;
 mod db;
+mod proto;
 
 use actix_web::{middleware, App, HttpServer};
 
