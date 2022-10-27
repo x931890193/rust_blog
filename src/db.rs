@@ -1,12 +1,12 @@
 use rbatis::rbatis::{Rbatis,};
 use rbdc_mysql::driver::MysqlDriver;
 
-
+use lazy_static::lazy_static;
 
 use diesel::prelude::*;
 use diesel::r2d2::{self, ConnectionManager};
 
-pub type PoolDiesel = r2d2::Pool<ConnectionManager<MysqlConnection>>;
+type PoolDiesel = r2d2::Pool<ConnectionManager<MysqlConnection>>;
 // pub type Pool = r2d2::Pool<ConnectionManager<PgConnection>>;
 
 // let db_url = "postgres://username:password@localhost/rust_db"
@@ -26,4 +26,13 @@ pub fn create_db_pool_rbatis(db_url: &str) -> Rbatis  {
     let rb = Rbatis::new();
     rb.init(MysqlDriver{}, db_url).unwrap();
     rb
+}
+
+
+lazy_static! {
+    pub static ref DB_POOL: Rbatis = {
+        let db_url = "mysql://root:flzx3qc@127.0.0.1:3306/blog";
+        let pool = create_db_pool_rbatis(&db_url);
+        pool
+    };
 }

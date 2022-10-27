@@ -1,21 +1,27 @@
 extern crate captcha;
 
-use std::path::Path;
-use captcha::{Captcha, RngCaptcha};
+use captcha::{Captcha};
 use captcha::filters::Noise;
 
+use crate::utils::redis::{self, redis::Commands};
 
+
+// this crate not very ok :), size not ok!!
 pub fn generate() -> Captcha {
     let mut cap = Captcha::new();
-    cap.add_chars(4)
+    cap.add_chars(5)
         .apply_filter(Noise::new(0.1))
-        .view(220, 120);
-    cap.save(Path::new("captcha.png")).expect("save failed");
+        .view(120, 38);
     cap
 }
 
-pub fn verify() -> bool {
-    return true
+pub fn verify(id: i64) -> bool {
+    let mut redis_client = redis::REDIS_POOL.get().unwrap();
+    let res = redis_client.get::<i64, String>(id).unwrap();
+    if res == "OK" {
+        return true
+    }
+    return false
 }
 
 #[cfg(test)]
