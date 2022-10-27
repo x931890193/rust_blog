@@ -1,10 +1,4 @@
-mod handlers;
-mod routers;
-mod db;
-mod proto;
-mod models;
-mod utils;
-
+use rust_blog::*;
 use actix_web::{middleware, App, HttpServer};
 
 
@@ -19,7 +13,7 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(move || {
         App::new()
             .app_data(actix_web::web::Data::new(db::DB_POOL.clone()))
-            .app_data(actix_web::web::Data::new(utils::redis::REDIS_POOL.clone()))
+            .app_data(actix_web::web::Data::new(utils::cache::REDIS_POOL.clone()))
             .wrap(middleware::Logger::default())
             .configure(routers::config)
     })

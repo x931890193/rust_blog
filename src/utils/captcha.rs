@@ -3,7 +3,7 @@ extern crate captcha;
 use captcha::{Captcha};
 use captcha::filters::Noise;
 
-use crate::utils::redis::{self, redis::Commands};
+use crate::utils::cache::{self, redis::Commands};
 
 
 // this crate not very ok :), size not ok!!
@@ -16,7 +16,7 @@ pub fn generate() -> Captcha {
 }
 
 pub fn verify(id: i64) -> bool {
-    let mut redis_client = redis::REDIS_POOL.get().unwrap();
+    let mut redis_client = cache::REDIS_POOL.get().unwrap();
     let res = redis_client.get::<i64, String>(id).unwrap();
     if res == "OK" {
         return true

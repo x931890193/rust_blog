@@ -4,11 +4,11 @@ use chrono::Local;
 
 use crate::proto::pb;
 use crate::utils::captcha;
-use crate::utils::redis::{self, redis::Commands};
+use crate::utils::cache::{self, redis::Commands};
 
 pub async fn get_captcha() -> Result<HttpResponse> {
     let cap = captcha::generate();
-    let mut redis_client = redis::REDIS_POOL.get().unwrap();
+    let mut redis_client = cache::REDIS_POOL.get().unwrap();
     let id: i64 = Local::now().timestamp_millis();
     redis_client.set_ex::<i64, String, String>(id, cap.chars_as_string(), 60).unwrap();
     let resp = pb::CaptchaResp{

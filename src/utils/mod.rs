@@ -4,4 +4,4 @@ pub mod github;
 pub mod http;
 pub mod mail;
 pub mod qiniu;
-pub mod redis;
+pub mod cache;

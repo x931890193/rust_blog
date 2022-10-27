@@ -1,22 +1,26 @@
-
+use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
-#[derive(Clone, Debug, Serialize, Deserialize)]
+
+#[derive(Queryable, Clone, Debug, Serialize, Deserialize)]
+#[diesel(table_name = article)]
 pub struct Article {
-    pub id: Option<u32>,
-    pub category_id: Option<u32>,
-    pub tag: Option<String>,
-    pub user_id: Option<u32>,
-    pub title: Option<String>,
-    pub summary: Option<String>,
-    pub content: Option<String>,
-    pub click_times: Option<u32>,
-    pub like_count: Option<i32>,
-    pub collect_count: Option<i32>,
-    pub comment_count: Option<i32>,
-    pub weight: Option<u32>,
-    pub support: Option<bool>,
-    pub header_img_type: Option<u32>,
-    pub header_img: Option<String>,
+    pub id: i64,
+    // pub create_at: Option<FastDateTime>,
+    // pub update_at: Option<FastDateTime>,
+    pub is_delete: bool,
+    pub category_id: u32,
+    pub tag: String,
+    pub user_id: u32,
+    pub title: String,
+    pub summary: String,
+    pub content: String,
+    pub click_times: u32,
+    pub like_count: i32,
+    pub collect_count: i32,
+    pub comment_count: i32,
+    pub weight: u32,
+    pub support: bool,
+    pub header_img_type: u32,
+    pub header_img: String,
 }
-//crud = async fn insert(...)+async fn  select_by_column(...)+ async fn  update_by_column(...)+async fn  delete_by_column(...)...and more
-rbatis::crud!(Article {},"article"); // this way custom table name
+
