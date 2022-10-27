@@ -3,6 +3,7 @@ mod routers;
 mod db;
 mod proto;
 mod models;
+mod utils;
 
 use actix_web::{middleware, App, HttpServer};
 

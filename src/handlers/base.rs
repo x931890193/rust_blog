@@ -27,8 +27,9 @@ pub async fn index(db_pool: web::Data<Rbatis>,) -> HttpResponse {
     println!("select_all = {:?}", data);
     HttpResponse::Ok().json(resp) // <- send response
 }
-
+// return protobuf without req
 pub async fn base_resp() -> Result<HttpResponse> {
     let base = pb::BaseResp{ code: 0, msg: "Hello World!".to_string() };
     HttpResponse::Ok().protobuf(base)
 }
+
