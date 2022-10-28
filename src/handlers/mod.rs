@@ -12,3 +12,4 @@ pub mod reward;
 pub mod site_info;
 pub mod user;
 pub mod websocket;
+pub mod e;

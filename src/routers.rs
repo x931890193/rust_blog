@@ -11,7 +11,7 @@ pub fn config(cfg: &mut ServiceConfig) {
             scope("/admin")
                 .service(r("/generate").route(get().to(base::base_resp)))
                 .service(r("/captcha").route(get().to(user::get_captcha)))
-                .service(r("/login").route(get().to(base::base_resp)))
+                .service(r("/login").route(post().to(user::admin_login)))
                 .service(r("/info").route(get().to(base::base_resp)))
                 .service(r("/routers").route(get().to(base::base_resp)))
                 .service(r("/logout").route(get().to(base::base_resp)))

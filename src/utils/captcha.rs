@@ -15,13 +15,10 @@ pub fn generate() -> Captcha {
     cap
 }
 
-pub fn verify(id: i64) -> bool {
+pub fn verify(id: i64, code: String) -> bool {
     let mut redis_client = cache::REDIS_POOL.get().unwrap();
     let res = redis_client.get::<i64, String>(id).unwrap();
-    if res == "OK" {
-        return true
-    }
-    return false
+    return res == code
 }
 
 #[cfg(test)]
@@ -29,5 +26,13 @@ mod test {
     #[test]
     fn test_generate(){
         super::generate();
+    }
+
+    #[test]
+    fn test_redis() {
+        use crate::utils::cache::{self, redis::Commands};
+        let mut redis_client = cache::REDIS_POOL.get().unwrap();
+        let res = redis_client.get::<i64, String>(11).unwrap();
+        println!("res: {}", res)
     }
 }
