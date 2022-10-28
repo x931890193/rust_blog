@@ -31,7 +31,7 @@ pub async fn admin_login(req: ProtoBuf<pb::LoginAdminRequest>) -> Result<HttpRes
     let flag = captcha::verify(req.id.parse::<i64>().unwrap(), req.code.clone());
     if !flag {
         resp.code = e::AUTH_ERROR.clone() as u32;
-        resp.msg = e::ErrorMsg[&e::AUTH_ERROR].clone()
+        resp.msg = e::ERROR_MSG[&e::AUTH_ERROR].clone()
     } else {
         resp.token = "111111".to_string();
     }

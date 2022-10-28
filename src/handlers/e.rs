@@ -8,7 +8,7 @@ lazy_static! {
     pub static ref DB_ERROR: i32 = 3;
     pub static ref LOGIC_ERROR: i32 = 4;
     pub static ref UNKNOWN: i32 = 5;
-    pub static ref ErrorMsg: HashMap<i32, String> =  {
+    pub static ref ERROR_MSG: HashMap<i32, String> =  {
         let mut err_msg = HashMap::new();
         err_msg.insert(1, String::from("认证失败"));
         err_msg.insert(2, String::from("参数错误"));

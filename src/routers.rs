@@ -2,6 +2,7 @@ use actix_web::web::{ServiceConfig, resource as r, get, scope, post};
 
 use crate::handlers::base;
 use crate::handlers::user;
+use crate::handlers::websocket;
 
 // dispatch router
 pub fn config(cfg: &mut ServiceConfig) {
@@ -65,7 +66,7 @@ pub fn config(cfg: &mut ServiceConfig) {
 
             )
         )
-        .service(r("/ws"))
+        .service(r("/ws").route(get().to(websocket::calculate_online)))
         .service(r("/qrcode"))
     ;
 }
