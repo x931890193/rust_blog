@@ -3,12 +3,10 @@ use std::str::FromStr;
 use std::collections::HashMap;
 use lazy_static::lazy_static;
 use std::error::Error;
-use async_std::future::timeout;
+
 use reqwest;
 use reqwest::header;
-use serde;
 use log;
-use log::log_enabled;
 
 
 
