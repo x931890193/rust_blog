@@ -54,7 +54,6 @@ pub async fn calculate_online(req: HttpRequest, stream: web::Payload) -> Result<
 #[cfg(test)]
 mod test {
     use std::sync::atomic::Ordering;
-    use redis::acl::Rule::On;
     use super::ONLINE;
     #[test]
     fn test_online() {
