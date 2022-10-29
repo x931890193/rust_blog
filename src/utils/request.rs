@@ -16,7 +16,7 @@ lazy_static!(
     pub static ref USER_AGENT: String = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36".to_string();
     pub static ref JSON_TYPE: String = "application/json".to_string();
     pub static ref PROTOBUF_TYPE: String = "application/protobuf".to_string();
-    pub static ref TIME_OUT: u64 = 10;
+    pub static ref TIME_OUT: time::Duration = time::Duration::new(10, 0);
 );
 
 pub enum ContentType {
@@ -31,7 +31,7 @@ fn get_client(extra_headers: HashMap<String, String>) -> reqwest::Client {
     }
     let client = reqwest::Client::builder()
         .user_agent(USER_AGENT.as_str())
-        .timeout(time::Duration::new(TIME_OUT.clone(), 0))
+        .timeout(TIME_OUT.clone())
         .default_headers(headers_map)
         .build()
         .unwrap();

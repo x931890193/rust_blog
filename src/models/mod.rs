@@ -1,2 +1,3 @@
-pub mod article;
+pub mod entity;
 pub mod comment;
+pub mod wrapper;

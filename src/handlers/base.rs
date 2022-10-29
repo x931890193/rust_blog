@@ -6,7 +6,7 @@ use serde::{Deserialize, Serialize};
 use chrono::{Local};
 
 use crate::proto::pb;
-use crate::models::article;
+use crate::models::entity;
 use crate::{db, schema};
 use crate::utils::cache;
 
