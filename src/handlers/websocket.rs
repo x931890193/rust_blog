@@ -10,15 +10,15 @@ use chrono::Local;
 static ONLINE: AtomicI64 = AtomicI64::new(0);
 
 
-struct Ws;
+struct WS;
 
 // implement 1
-impl Actor for Ws {
+impl Actor for WS {
     type Context = ws::WebsocketContext<Self>;
 }
 
 // implement 2
-impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for Ws {
+impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for WS {
     fn handle(&mut self, msg: Result<ws::Message, ws::ProtocolError>, ctx: &mut Self::Context) {
         match msg {
             Ok(ws::Message::Ping(msg)) => ctx.pong(&msg),
@@ -47,7 +47,7 @@ impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for Ws {
 }
 
 pub async fn calculate_online(req: HttpRequest, stream: web::Payload) -> Result<HttpResponse, Error> {
-    let resp = ws::start(Ws{}, &req, stream);
+    let resp = ws::start(WS{}, &req, stream);
     resp
 }
 

@@ -26,14 +26,6 @@ pub async fn index(db_pool: web::Data<db::DB_POOL>, redis_pool: web::Data<cache:
         msg : String::from("rust_blog"),
         server_time: Local::now().format(fmt).to_string().to_owned()
     };
-    // let results = article
-    //     .filter(support.eq(true))
-    //     .limit(5)
-    //     .load::<article::Article>(pool)
-    //     .expect("Error loading posts");
-
-    // let data = article::Article::select_all(&mut rb).await;
-    // println!("select_all = {:?}", data);
     let mut pool = redis_pool.get().unwrap();
     let res = pool.set::<&str, i32, String>("11", 2222);
     match res {

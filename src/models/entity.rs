@@ -1,12 +1,22 @@
+use std::ops::DerefMut;
+use actix_web::error::UrlencodedError::Serialize;
+use chrono::NaiveDateTime;
 use diesel::prelude::*;
+
+use diesel::{select, insert_into, insert_or_ignore_into, update};
+use diesel::Insertable;
+
 use serde::{Deserialize, Serialize};
 
-#[derive(Queryable, Clone, Debug, Serialize, Deserialize)]
+use crate::db::DB_POOL;
+
+
+#[derive(Queryable, PartialEq, Clone, Debug, Serialize, Deserialize)]
 #[diesel(table_name = article)]
 pub struct Article {
     pub id: i64,
-    pub create_at: String,
-    pub update_at: String,
+    pub create_at: NaiveDateTime,
+    pub update_at: NaiveDateTime,
     pub is_delete: bool,
     pub category_id: u32,
     pub tag: String,
@@ -24,14 +34,46 @@ pub struct Article {
     pub header_img: String,
 }
 
-impl Article {}
+impl Article {
 
-#[derive(Queryable, Clone, Debug, Serialize, Deserialize)]
+    fn select_one_by_query() -> Result<Article, E> {
+        unimplemented!()
+    }
+
+    fn select_list_by_query() -> Result<Vec<Article>, E> {
+        unimplemented!()
+    }
+
+    fn insert_one(values: impl Insertable<T>) -> Result<T, E> {
+        use crate::schema::article;
+        use crate::schema::article::dsl::*;
+        let mut conn = DB_POOL.get().unwrap();
+        insert_into(Self)
+            .values(&values)
+            .execute(conn.deref_mut())
+    }
+
+    fn insert_list(values: impl Insertable<T>) -> Result<T, E> {
+        use crate::schema::article;
+        use crate::schema::article::dsl::*;
+        let mut conn = DB_POOL.get().unwrap();
+        insert_into(Self)
+            .values(&values)
+            .execute(conn.deref_mut())
+    }
+
+    fn update_by_query(&self, ) -> Result<T, E> {
+        use crate::schema::article;
+        use crate::schema::article::dsl::*;
+    }
+}
+
+#[derive(Queryable, PartialEq, Clone, Debug, Serialize, Deserialize)]
 #[diesel(table_name = siteinfo)]
 pub struct SiteInfo {
     pub id: i64,
-    pub create_at: String,
-    pub update_at: String,
+    pub create_at: NaiveDateTime,
+    pub update_at: NaiveDateTime,
     pub is_delete: bool,
     pub author: String,
     pub title: String,
@@ -47,12 +89,12 @@ pub struct SiteInfo {
 }
 
 
-#[derive(Queryable, Clone, Debug, Serialize, Deserialize)]
+#[derive(Queryable, PartialEq, Clone, Debug, Serialize, Deserialize)]
 #[diesel(table_name = request)]
 pub struct Request {
     pub id: i64,
-    pub create_at: String,
-    pub update_at: String,
+    pub create_at: NaiveDateTime,
+    pub update_at: NaiveDateTime,
     pub is_delete: bool,
     pub ip: String,
     pub referer: String,
@@ -66,23 +108,23 @@ pub struct Request {
     pub request_time: u64,
 }
 
-#[derive(Queryable, Clone, Debug, Serialize, Deserialize)]
+#[derive(Queryable, PartialEq, Clone, Debug, Serialize, Deserialize)]
 #[diesel(table_name = tags)]
 pub struct Tags {
     pub id: i64,
-    pub create_at: String,
-    pub update_at: String,
+    pub create_at: NaiveDateTime,
+    pub update_at: NaiveDateTime,
     pub is_delete: bool,
     pub name: String,
     pub tag_type: u32,
 }
 
-#[derive(Queryable, Clone, Debug, Serialize, Deserialize)]
+#[derive(Queryable, PartialEq, Clone, Debug, Serialize, Deserialize)]
 #[diesel(table_name = category)]
 pub struct Category {
     pub id: i64,
-    pub create_at: String,
-    pub update_at: String,
+    pub create_at: NaiveDateTime,
+    pub update_at: NaiveDateTime,
     pub is_delete: bool,
     pub name: String,
     pub display_name: String,
@@ -91,12 +133,12 @@ pub struct Category {
     pub parent_id: u32,
 }
 
-#[derive(Queryable, Clone, Debug, Serialize, Deserialize)]
+#[derive(Queryable, PartialEq, Clone, Debug, Serialize, Deserialize)]
 #[diesel(table_name = reward)]
 pub struct Reward {
     pub id: i64,
-    pub create_at: String,
-    pub update_at: String,
+    pub create_at: NaiveDateTime,
+    pub update_at: NaiveDateTime,
     pub is_delete: bool,
     pub order_id: String,
     pub who: String,
@@ -104,12 +146,12 @@ pub struct Reward {
     pub payment_method: u32,
 }
 
-#[derive(Queryable, Clone, Debug, Serialize, Deserialize)]
+#[derive(Queryable, PartialEq, Clone, Debug, Serialize, Deserialize)]
 #[diesel(table_name = comment)]
 pub struct Comment {
     pub id: i64,
-    pub create_at: String,
-    pub update_at: String,
+    pub create_at: NaiveDateTime,
+    pub update_at: NaiveDateTime,
     pub is_delete: bool,
     pub user_id: i64,
     pub article_id: i64,
@@ -121,12 +163,12 @@ pub struct Comment {
     pub os: String,
 }
 
-#[derive(Queryable, Clone, Debug, Serialize, Deserialize)]
+#[derive(Queryable, PartialEq, Clone, Debug, Serialize, Deserialize)]
 #[diesel(table_name = user)]
 pub struct User {
     pub id: i64,
-    pub create_at: String,
-    pub update_at: String,
+    pub create_at: NaiveDateTime,
+    pub update_at: NaiveDateTime,
     pub is_delete: bool,
     pub user_name: String,
     pub password: String,
@@ -140,23 +182,23 @@ pub struct User {
     pub last_login: String,
 }
 
-#[derive(Queryable, Clone, Debug, Serialize, Deserialize)]
+#[derive(Queryable, PartialEq, Clone, Debug, Serialize, Deserialize)]
 #[diesel(table_name = like)]
 pub struct Like {
     pub id: i64,
-    pub create_at: String,
-    pub update_at: String,
+    pub create_at: NaiveDateTime,
+    pub update_at: NaiveDateTime,
     pub is_delete: bool,
     pub user_id: i64,
     pub article_id: i64,
 }
 
-#[derive(Queryable, Clone, Debug, Serialize, Deserialize)]
+#[derive(Queryable, PartialEq, Clone, Debug, Serialize, Deserialize)]
 #[diesel(table_name = link)]
 pub struct Link {
     pub id: i64,
-    pub create_at: String,
-    pub update_at: String,
+    pub create_at: NaiveDateTime,
+    pub update_at: NaiveDateTime,
     pub is_delete: bool,
     pub user_id: i64,
     pub title: String,
@@ -169,14 +211,51 @@ pub struct Link {
 }
 
 
-#[derive(Queryable, Clone, Debug, Serialize, Deserialize)]
+#[derive(Queryable, PartialEq, Clone, Debug, Serialize, Deserialize)]
 #[diesel(table_name = resource)]
 pub struct Resource {
     pub id: i64,
-    pub create_at: String,
-    pub update_at: String,
+    pub create_at: NaiveDateTime,
+    pub update_at: NaiveDateTime,
     pub is_delete: bool,
     pub uuid: String,
     pub key: String,
     pub r#type:  i32,
+}
+
+#[cfg(test)]
+mod test {
+    use std::ops::{DerefMut};
+    use diesel::prelude::*;
+    use diesel::{select, insert_into, insert_or_ignore_into};
+    use crate::db::DB_POOL;
+    use chrono::NaiveDateTime;
+
+    #[test]
+    fn test_insert() {
+        use crate::schema::category;
+        use crate::schema::category::dsl::*;
+        use super::Category;
+
+        let mut conn = DB_POOL.get().unwrap();
+        let now = select(diesel::dsl::now).get_result::<NaiveDateTime>(conn.deref_mut()).unwrap();
+        let mut obj = Category{
+            id: None.unwrap(),
+            create_at: Default::default(),
+            update_at: Default::default(),
+            is_delete: false,
+            name: "".to_string(),
+            display_name: "".to_string(),
+            seo_desc: "".to_string(),
+            support: false,
+            parent_id: 0
+        };
+
+        let values = serde_json::from_str::<Category>(&format!("{:?}", obj)).unwrap();
+
+        // not ok
+        insert_into(category)
+            .values(&values)
+            .execute(conn.deref_mut()).expect("Error");
+    }
 }
