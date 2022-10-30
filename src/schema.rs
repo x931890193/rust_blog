@@ -190,16 +190,6 @@ diesel::table! {
 }
 
 diesel::allow_tables_to_appear_in_same_query!(
-    article,
-    category,
-    collection,
-    comment,
-    like,
-    link,
-    request,
-    resource,
-    reward,
-    siteinfo,
-    tags,
+    article, category, collection, comment, like, link, request, resource, reward, siteinfo, tags,
     user,
 );

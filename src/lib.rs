@@ -1,7 +1,7 @@
-pub mod handlers;
-pub mod routers;
 pub mod db;
-pub mod proto;
+pub mod handlers;
 pub mod models;
-pub mod utils;
+pub mod proto;
+pub mod routers;
 pub mod schema;
+pub mod utils;

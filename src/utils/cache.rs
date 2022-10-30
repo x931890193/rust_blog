@@ -4,8 +4,8 @@ pub use redis;
 
 use lazy_static::lazy_static;
 
-type RedisPool = r2d2::Pool<redis::Client>;
-
+// for request binding
+pub type RedisPool = r2d2::Pool<redis::Client>;
 
 pub fn create_redis_pool(redis_url: &str) -> RedisPool {
     // set up redis connection pool
@@ -16,6 +16,7 @@ pub fn create_redis_pool(redis_url: &str) -> RedisPool {
 }
 
 lazy_static! {
+    // for anywhere to use
     pub static ref REDIS_POOL: RedisPool  = {
         let redis_url = "redis://127.0.0.1/1";
         let pool = create_redis_pool(&redis_url);

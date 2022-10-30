@@ -2,13 +2,12 @@ use std::sync::atomic::AtomicI64;
 use std::sync::atomic::Ordering;
 
 use actix::{Actor, ActorContext, StreamHandler};
-use actix_web::{HttpResponse, web, Result, HttpRequest, Error};
+use actix_web::{web, Error, HttpRequest, HttpResponse, Result};
 use actix_web_actors::ws;
 use chrono::Local;
 
 // calculate online counter
 static ONLINE: AtomicI64 = AtomicI64::new(0);
-
 
 struct WS;
 
@@ -26,7 +25,7 @@ impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for WS {
                 println!("receive: {:?} {}", text, Local::now().time());
                 let res = ONLINE.load(Ordering::SeqCst);
                 ctx.text(format!("{:?}", res))
-            },
+            }
             Ok(ws::Message::Binary(bin)) => ctx.binary(bin),
             _ => (),
         }
@@ -46,18 +45,21 @@ impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for WS {
     }
 }
 
-pub async fn calculate_online(req: HttpRequest, stream: web::Payload) -> Result<HttpResponse, Error> {
-    let resp = ws::start(WS{}, &req, stream);
+pub async fn calculate_online(
+    req: HttpRequest,
+    stream: web::Payload,
+) -> Result<HttpResponse, Error> {
+    let resp = ws::start(WS {}, &req, stream);
     resp
 }
 
 #[cfg(test)]
 mod test {
-    use std::sync::atomic::Ordering;
     use super::ONLINE;
+    use std::sync::atomic::Ordering;
     #[test]
     fn test_online() {
-        let res= ONLINE.fetch_and(1, Ordering::SeqCst);
+        let res = ONLINE.fetch_and(1, Ordering::SeqCst);
         println!("count: {:?}", ONLINE)
     }
 }

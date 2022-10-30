@@ -1,6 +1,3 @@
 use crate::models::entity;
 
-
-impl entity::Article {
-
-}
+impl entity::Article {}

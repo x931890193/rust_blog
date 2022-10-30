@@ -1,4 +1,4 @@
-use actix_web::web::{ServiceConfig, resource as r, get, scope, post};
+use actix_web::web::{get, post, resource as r, scope, ServiceConfig};
 
 use crate::handlers::base;
 use crate::handlers::user;
@@ -6,8 +6,7 @@ use crate::handlers::websocket;
 
 // dispatch router
 pub fn config(cfg: &mut ServiceConfig) {
-    cfg
-        .service(r("/").route(get().to(base::index)))
+    cfg.service(r("/").route(get().to(base::index)))
         .service(
             scope("/admin")
                 .service(r("/generate").route(get().to(base::base_resp)))
@@ -35,39 +34,15 @@ pub fn config(cfg: &mut ServiceConfig) {
                 .service(r("/dashboard/log/:LogType").route(get().to(base::base_resp)))
                 .service(r("/system/setting/siteSetting").route(get().to(base::base_resp)))
                 .service(r("/system/setting/siteSetting").route(get().to(base::base_resp)))
-                .service(r("/tool/qiNiu/upload").route(get().to(base::base_resp)))
+                .service(r("/tool/qiNiu/upload").route(get().to(base::base_resp))),
         )
-        .service(scope("/article")
-            .service(r("/user/{user_id}").route(get().to(base::index))
-
-            )
-        ).service(scope("/comment")
-            .service(r("/list").route(get().to(base::base_resp))
-
-            )
-        ).service(scope("/resource")
-            .service(r("/list").route(get().to(base::base_resp))
-
-            )
-        ).service(scope("/user")
-            .service(r("")
-
-            )
-        ).service(scope("/reward")
-            .service(r("")
-
-            )
-        ).service(scope("link")
-            .service(r("")
-
-            )
-        ).service(scope("likeOrCollect")
-            .service(r("")
-
-            )
-        )
+        .service(scope("/article").service(r("/user/{user_id}").route(get().to(base::index))))
+        .service(scope("/comment").service(r("/list").route(get().to(base::base_resp))))
+        .service(scope("/resource").service(r("/list").route(get().to(base::base_resp))))
+        .service(scope("/user").service(r("")))
+        .service(scope("/reward").service(r("")))
+        .service(scope("link").service(r("")))
+        .service(scope("likeOrCollect").service(r("")))
         .service(r("/ws").route(get().to(websocket::calculate_online)))
-        .service(r("/qrcode"))
-    ;
+        .service(r("/qrcode"));
 }
-

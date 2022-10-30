@@ -1,6 +1,5 @@
-use rust_blog::*;
 use actix_web::{middleware, App, HttpServer};
-
+use rust_blog::*;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -17,7 +16,7 @@ async fn main() -> std::io::Result<()> {
             .wrap(middleware::Logger::default())
             .configure(routers::config)
     })
-        .bind(&bind)?
-        .run()
-        .await
+    .bind(&bind)?
+    .run()
+    .await
 }

@@ -1,15 +1,13 @@
-use std::ops::DerefMut;
-use actix_web::error::UrlencodedError::Serialize;
 use chrono::NaiveDateTime;
 use diesel::prelude::*;
+use std::ops::DerefMut;
 
-use diesel::{select, insert_into, insert_or_ignore_into, update};
 use diesel::Insertable;
+use diesel::{insert_into, insert_or_ignore_into, select, update};
 
 use serde::{Deserialize, Serialize};
 
 use crate::db::DB_POOL;
-
 
 #[derive(Queryable, PartialEq, Clone, Debug, Serialize, Deserialize)]
 #[diesel(table_name = article)]
@@ -35,37 +33,36 @@ pub struct Article {
 }
 
 impl Article {
-
-    fn select_one_by_query() -> Result<Article, E> {
-        unimplemented!()
-    }
-
-    fn select_list_by_query() -> Result<Vec<Article>, E> {
-        unimplemented!()
-    }
-
-    fn insert_one(values: impl Insertable<T>) -> Result<T, E> {
-        use crate::schema::article;
-        use crate::schema::article::dsl::*;
-        let mut conn = DB_POOL.get().unwrap();
-        insert_into(Self)
-            .values(&values)
-            .execute(conn.deref_mut())
-    }
-
-    fn insert_list(values: impl Insertable<T>) -> Result<T, E> {
-        use crate::schema::article;
-        use crate::schema::article::dsl::*;
-        let mut conn = DB_POOL.get().unwrap();
-        insert_into(Self)
-            .values(&values)
-            .execute(conn.deref_mut())
-    }
-
-    fn update_by_query(&self, ) -> Result<T, E> {
-        use crate::schema::article;
-        use crate::schema::article::dsl::*;
-    }
+    // fn select_one_by_query() -> Result<Article, E> {
+    //     unimplemented!()
+    // }
+    //
+    // fn select_list_by_query() -> Result<Vec<Article>, E> {
+    //     unimplemented!()
+    // }
+    //
+    // fn insert_one(values: impl Insertable<T>) -> Result<T, E> {
+    //     use crate::schema::article;
+    //     use crate::schema::article::dsl::*;
+    //     let mut conn = DB_POOL.get().unwrap();
+    //     insert_into(Self)
+    //         .values(&values)
+    //         .execute(conn.deref_mut())
+    // }
+    //
+    // fn insert_list(values: impl Insertable<T>) -> Result<T, E> {
+    //     use crate::schema::article;
+    //     use crate::schema::article::dsl::*;
+    //     let mut conn = DB_POOL.get().unwrap();
+    //     insert_into(Self)
+    //         .values(&values)
+    //         .execute(conn.deref_mut())
+    // }
+    //
+    // fn update_by_query(&self, ) -> Result<T, E> {
+    //     use crate::schema::article;
+    //     use crate::schema::article::dsl::*;
+    // }
 }
 
 #[derive(Queryable, PartialEq, Clone, Debug, Serialize, Deserialize)]
@@ -87,7 +84,6 @@ pub struct SiteInfo {
     pub git: String,
     pub job: String,
 }
-
 
 #[derive(Queryable, PartialEq, Clone, Debug, Serialize, Deserialize)]
 #[diesel(table_name = request)]
@@ -210,7 +206,6 @@ pub struct Link {
     pub verify_status: i32,
 }
 
-
 #[derive(Queryable, PartialEq, Clone, Debug, Serialize, Deserialize)]
 #[diesel(table_name = resource)]
 pub struct Resource {
@@ -220,42 +215,45 @@ pub struct Resource {
     pub is_delete: bool,
     pub uuid: String,
     pub key: String,
-    pub r#type:  i32,
+    pub r#type: i32,
 }
 
 #[cfg(test)]
 mod test {
-    use std::ops::{DerefMut};
-    use diesel::prelude::*;
-    use diesel::{select, insert_into, insert_or_ignore_into};
     use crate::db::DB_POOL;
     use chrono::NaiveDateTime;
+    use diesel::prelude::*;
+    use diesel::{insert_into, insert_or_ignore_into, select};
+    use std::ops::DerefMut;
 
     #[test]
     fn test_insert() {
+        use super::Category;
         use crate::schema::category;
         use crate::schema::category::dsl::*;
-        use super::Category;
 
         let mut conn = DB_POOL.get().unwrap();
-        let now = select(diesel::dsl::now).get_result::<NaiveDateTime>(conn.deref_mut()).unwrap();
-        let mut obj = Category{
-            id: None.unwrap(),
-            create_at: Default::default(),
-            update_at: Default::default(),
-            is_delete: false,
-            name: "".to_string(),
-            display_name: "".to_string(),
-            seo_desc: "".to_string(),
-            support: false,
-            parent_id: 0
-        };
+        let now = select(diesel::dsl::now)
+            .get_result::<NaiveDateTime>(conn.deref_mut())
+            .unwrap();
+        // let mut obj = Category{
+        //     id: None.unwrap(),
+        //     create_at: Default::default(),
+        //     update_at: Default::default(),
+        //     is_delete: false,
+        //     name: "".to_string(),
+        //     display_name: "".to_string(),
+        //     seo_desc: "".to_string(),
+        //     support: false,
+        //     parent_id: 0
+        // };
 
-        let values = serde_json::from_str::<Category>(&format!("{:?}", obj)).unwrap();
+        // let values = serde_json::from_str::<Category>(&format!("{:?}", obj)).unwrap();
 
         // not ok
         insert_into(category)
-            .values(&values)
-            .execute(conn.deref_mut()).expect("Error");
+            .values((name.eq("ss")))
+            .execute(conn.deref_mut())
+            .expect("Error");
     }
 }

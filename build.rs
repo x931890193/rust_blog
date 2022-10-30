@@ -1,4 +1,3 @@
-
 fn main() {
     // std::fs::create_dir_all("src/proto").unwrap();
     // protobuf_codegen::Codegen::new()
