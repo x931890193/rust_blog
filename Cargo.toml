@@ -13,11 +13,14 @@ actix-web = "4"
 actix-web-actors = "4.1.0"
 async-std = "1.12.0"
 captcha = "0.0.9"
+base64 = "0.12.3"
+
 chrono = { version = "0.4", features = ["serde"] }
 diesel = { version = "2.0.2", features = ["r2d2", "postgres", "chrono"] }
 dotenvy = "0.15"
 env_logger = "0.9"
 futures-util = { version = "0.3.17", default-features = false, features = ["std"] }
+hex = { version = "0.4"}
 json = "0.12"
 lazy_static = "1.4.0"
 log = "0.4"
@@ -27,6 +30,10 @@ protobuf = { version = "3.1", features = ["with-bytes"] }
 rbatis = "4.0.35"
 rbdc = "0.1.20"
 rbdc-mysql = "0.1.15"
+
+rsa = "0.3.0"
+rust-crypto = "^0.2"
+
 reqwest = { version = "0.11.12", features = ["json", ] }
 
 redis = { version = "0.22.1", features = ["tokio-comp", "r2d2"] }
