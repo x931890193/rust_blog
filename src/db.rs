@@ -6,7 +6,7 @@ use lazy_static::lazy_static;
 
 pub fn create_db_pool_rbatis(db_url: &str) -> Rbatis {
     let rb = Rbatis::new();
-    rb.init(PgDriver{}, db_url).unwrap();
+    rb.init(PgDriver {}, db_url).unwrap();
     rb
 }
 
