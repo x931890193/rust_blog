@@ -2,7 +2,6 @@ use actix_protobuf::ProtoBufResponseBuilder as _;
 use actix_web::{web, HttpResponse, Result};
 
 use chrono::Local;
-use rbatis::executor::RbatisRef;
 use redis::Commands;
 use serde::{Deserialize, Serialize};
 

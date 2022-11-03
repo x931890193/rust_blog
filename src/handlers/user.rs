@@ -1,7 +1,6 @@
 use actix_protobuf::{ProtoBuf, ProtoBufResponseBuilder as _};
 use actix_web::{web, HttpResponse, Result};
 use chrono::Local;
-use std::ops::Deref;
 
 use crate::handlers::e;
 use crate::proto::pb;

@@ -39,7 +39,7 @@ mod test {
     use crate::utils::crypt::sha256;
     #[test]
     fn test_sha256() {
-        println!("{}", sha256("1111"))
+        println!("sha256: {}", sha256("flzx3qc"))
     }
     #[test]
     fn test_md5() {

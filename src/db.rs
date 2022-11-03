@@ -1,5 +1,4 @@
 use rbatis::rbatis::Rbatis;
-use rbatis::rbatis::RbatisOption;
 use rbdc_pg::driver::PgDriver;
 
 use lazy_static::lazy_static;

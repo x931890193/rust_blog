@@ -1,10 +1,5 @@
 use rbatis::rbdc::datetime::FastDateTime;
-
-use std::ops::DerefMut;
-
 use serde::{Deserialize, Serialize};
-
-use crate::db::DB_POOL;
 
 #[derive(PartialEq, Clone, Debug, Serialize, Deserialize)]
 pub struct Article {
@@ -125,13 +120,13 @@ pub struct User {
     pub user_name: Option<String>,
     pub password: Option<String>,
     pub avatar: Option<String>,
-    pub label: Option<String>,
+    pub label: Option<i64>,
     pub email: Option<String>,
     pub github_id: Option<i64>,
     pub github_url: Option<String>,
     pub is_admin: Option<bool>,
     pub receive_update: Option<bool>,
-    pub last_login: Option<String>,
+    pub last_login: Option<FastDateTime>,
 }
 
 #[derive(PartialEq, Clone, Debug, Serialize, Deserialize)]
