@@ -1,9 +1,7 @@
 use base64;
 use crypto::digest::Digest;
-use crypto::sha2::Sha256;
 use crypto::md5::Md5;
-
-
+use crypto::sha2::Sha256;
 
 pub fn sha256(src: &str) -> String {
     let mut m = Sha256::new();
@@ -20,9 +18,9 @@ pub fn b64_decode(src: &str) -> Result<String, base64::DecodeError> {
             } else {
                 Err(base64::DecodeError::InvalidLength)
             }
-        },
-        Err(e) => { Err(e) }
-    }
+        }
+        Err(e) => Err(e),
+    };
 }
 
 pub fn b64_encode(src: &str) -> String {
