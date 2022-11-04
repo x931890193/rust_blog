@@ -39,11 +39,12 @@ pub fn config(cfg: &mut ServiceConfig) {
         .service(scope("/article").service(r("/user/{user_id}").route(get().to(base::index))))
         .service(scope("/comment").service(r("/list").route(get().to(base::base_resp))))
         .service(scope("/resource").service(r("/list").route(get().to(base::base_resp))))
-        .service(scope("/user")
-            .service(r("/github/oauth").route(get().to(user::github_oauth)))
-            .service(r("logout").route(post().to(user::login_out)))
-            .service(r("/getUserIngo").route(get().to(user::user_info)))
-            .service(r("/edit").route(post().to(user::edit)))
+        .service(
+            scope("/user")
+                .service(r("/github/oauth").route(get().to(user::github_oauth)))
+                .service(r("logout").route(post().to(user::login_out)))
+                .service(r("/getUserIngo").route(get().to(user::user_info)))
+                .service(r("/edit").route(post().to(user::edit))),
         )
         .service(scope("/reward").service(r("")))
         .service(scope("link").service(r("")))

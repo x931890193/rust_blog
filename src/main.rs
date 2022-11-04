@@ -14,6 +14,9 @@ async fn main() -> std::io::Result<()> {
             .app_data(actix_web::web::Data::new(db::DB_POOL.clone()))
             .app_data(actix_web::web::Data::new(utils::cache::REDIS_POOL.clone()))
             .wrap(middleware::Logger::default())
+            .wrap(middleware::Logger::default())
+            .wrap(middlewares::Request)
+            .wrap(middlewares::BaseAuth)
             .configure(routers::config)
     })
     .bind(&bind)?
