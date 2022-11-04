@@ -1,8 +1,10 @@
 use actix_protobuf::{ProtoBuf, ProtoBufResponseBuilder as _};
 use actix_web::{web, HttpResponse, Result};
 use chrono::Local;
+use std::error::Error;
 
 use crate::handlers::e;
+use crate::models::wrapper;
 use crate::proto::pb;
 use crate::utils::cache::{self, redis::Commands};
 use crate::utils::captcha;
@@ -32,9 +34,25 @@ pub async fn admin_login(req: ProtoBuf<pb::LoginAdminRequest>) -> Result<HttpRes
     let flag = captcha::verify(req.id.parse::<i64>().unwrap(), req.code.clone());
     if !flag {
         resp.code = e::AUTH_ERROR.clone() as u32;
-        resp.msg = e::ERROR_MSG[&e::AUTH_ERROR].clone()
+        resp.msg = format!(
+            "{} {}",
+            e::ERROR_MSG[&e::AUTH_ERROR].clone(),
+            "验证码错误".to_string()
+        )
     } else {
-        resp.token = "111111".to_string();
+        let user = wrapper::WrapperUser::new(&req.username, &req.password);
+        let token_res = user.auth_user().await;
+        match token_res {
+            Ok(token) => resp.token = token.to_string(),
+            Err(error) => {
+                resp.code = e::AUTH_ERROR.clone() as u32;
+                resp.msg = format!(
+                    "{} {}",
+                    e::ERROR_MSG[&e::AUTH_ERROR].clone(),
+                    &error.to_string()
+                );
+            }
+        }
     }
     HttpResponse::Ok().protobuf(resp)
 }

@@ -15,7 +15,7 @@ pub fn generate() -> Captcha {
 pub fn verify(id: i64, code: String) -> bool {
     let mut redis_client = cache::REDIS_POOL.get().unwrap();
     let res = redis_client.get::<i64, String>(id).unwrap();
-    return res == code;
+    return res.to_lowercase() == code.to_lowercase();
 }
 
 #[cfg(test)]

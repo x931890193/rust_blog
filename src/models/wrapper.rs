@@ -1,8 +1,11 @@
 use crate::db::DB_POOL;
+use crate::handlers::e;
 use crate::models::entity::*;
 use crate::utils::crypt;
+use crate::utils::jwt;
 use rbatis;
-use std::fmt::Error;
+use std::error::Error;
+use std::fmt::Debug;
 
 rbatis::crud!(Article {});
 rbatis::crud!(SiteInfo {});
@@ -22,32 +25,39 @@ rbatis::impl_select!(Category{select_by_name(display_name:&str, name:&str) => "`
 rbatis::impl_select!(User{verify_user(table_name:&str, user_name:&str, password:&str) -> Option => "`where user_name = #{user_name} and password = #{password} limit 1;`"});
 
 //
-struct WrapperUser {
-    use_name: String,
-    password: String,
+pub struct WrapperUser {
+    pub use_name: String,
+    pub password: String,
 }
 
 impl WrapperUser {
-    fn new(&self, user_name: &str, password: &str) -> WrapperUser {
+    pub fn new(user_name: &str, password: &str) -> WrapperUser {
         WrapperUser {
             use_name: user_name.to_string(),
             password: crypt::sha256(password),
         }
     }
 
-    fn auth_user(&self) -> bool {
-        let res = self.authenticate();
-        true
+    pub async fn auth_user(&self) -> Result<String, rbatis::Error> {
+        match self.authenticate().await {
+            Ok(token) => Ok(token),
+            Err(error) => Err(error),
+        }
     }
 
     async fn authenticate(&self) -> Result<String, rbatis::Error> {
-        let mut rb = DB_POOL.acquire().await.unwrap();
-        let data = User::verify_user(&mut rb, r#""user""#, &self.use_name, &self.password).await;
-        Ok("".to_string())
-    }
-
-    fn generate_token(&self) -> Result<String, Error> {
-        todo!()
+        let mut rb = DB_POOL.acquire().await?;
+        return match User::verify_user(&mut rb, r#""user""#, &self.use_name, &self.password).await?
+        {
+            Some(user) => {
+                let token = jwt::generate_jwt(user);
+                match token {
+                    Ok(token) => Ok(token),
+                    Err(err) => Err(rbatis::Error::from("generate jwt token error!")),
+                }
+            }
+            None => Err(rbatis::Error::from("user not exist!")),
+        };
     }
 }
 
