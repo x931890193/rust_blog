@@ -56,3 +56,168 @@ pub async fn admin_login(req: ProtoBuf<pb::LoginAdminRequest>) -> Result<HttpRes
     }
     HttpResponse::Ok().protobuf(resp)
 }
+
+pub async fn admin_info(req: ProtoBuf<pb::AdminInfoResp>) -> Result<HttpResponse>{
+    let resp = pb::AdminInfoResp{
+        name: "".to_string(),
+        avatar: "".to_string(),
+        job: "".to_string(),
+        organization: "".to_string(),
+        location: "".to_string(),
+        email: "".to_string(),
+        introduction: "".to_string(),
+        personal_website: "".to_string(),
+        job_name: "".to_string(),
+        organization_name: "".to_string(),
+        location_name: "".to_string(),
+        phone: "".to_string(),
+        registration_date: "".to_string(),
+        account_id: "".to_string(),
+        certification: "".to_string(),
+        role: "".to_string(),
+        code: 0,
+        msg: "".to_string()
+    };
+    HttpResponse::Ok().protobuf(resp)
+}
+
+pub async fn routers() -> Result<HttpResponse> {
+    let mut resp = pb::AdminRouterResp{
+        code: 0,
+        msg: "".to_string(),
+        data: Vec::new()
+    };
+    resp.data.push(pb::Component {
+        component: "Layout".to_string(),
+        path: "/article".to_string(),
+        name: "".to_string(),
+        meta: Some(pb::ComponentMeta {
+            title: "文章管理".to_string(),
+            name: "".to_string(),
+            icon: "documentation".to_string(),
+            no_cache: false,
+            affix: false,
+            active_menu: "".to_string()
+        }),
+        hidden: false,
+        children: vec!(
+            pb::Component {
+                component: "blog/blog/index".to_string(),
+                path: "".to_string(),
+                name: "index".to_string(),
+                meta: Some(pb::ComponentMeta {
+                    title: "".to_string(),
+                    name: "".to_string(),
+                    icon: "documentation".to_string(),
+                    no_cache: false,
+                    affix: false,
+                    active_menu: "".to_string()
+                }),
+                hidden: true,
+                children: vec![]
+            },
+            pb::Component{
+                component: "blog/blog/index".to_string(),
+                path: "".to_string(),
+                name: "AddBlog".to_string(),
+                meta: Some(pb::ComponentMeta{
+                    title: "文章管理".to_string(),
+                    name: "".to_string(),
+                    icon: "documentation".to_string(),
+                    no_cache: false,
+                    affix: false,
+                    active_menu: "/article/index".to_string()
+                }),
+                hidden: true,
+                children: vec![]},
+            pb::Component{
+                component: "blog/blog/index".to_string(),
+                path: "".to_string(),
+                name: "AddBlog".to_string(),
+                meta: Some(pb::ComponentMeta{
+                    title: "文章管理".to_string(),
+                    name: "".to_string(),
+                    icon: "documentation".to_string(),
+                    no_cache: false,
+                    affix: false,
+                    active_menu: "/article/index".to_string()
+                }),
+                hidden: true,
+                children: vec![]},
+            pb::Component{
+                component: "blog/blog/index".to_string(),
+                path: "".to_string(),
+                name: "AddBlog".to_string(),
+                meta: Some(pb::ComponentMeta{
+                    title: "文章管理".to_string(),
+                    name: "".to_string(),
+                    icon: "documentation".to_string(),
+                    no_cache: false,
+                    affix: false,
+                    active_menu: "/article/index".to_string()
+                }),
+                hidden: true,
+                children: vec![]},
+            pb::Component{
+                component: "Layout".to_string(),
+                path: "/tool".to_string(),
+                name: "".to_string(),
+                meta: Some(pb::ComponentMeta{
+                    title: "系统工具".to_string(),
+                    name: "".to_string(),
+                    icon: "tool".to_string(),
+                    no_cache: false,
+                    affix: false,
+                    active_menu: "".to_string()
+                }),
+                hidden: true,
+                children: vec![]},
+        )
+    });
+    HttpResponse::Ok().protobuf(resp)
+}
+
+pub async fn login_out() -> Result<HttpResponse> {
+    let resp = pb::BaseResp{ code: 0, msg: "".to_string() };
+    HttpResponse::Ok().protobuf(resp)
+}
+
+pub async fn github_oauth() -> HttpResponse {
+    // let resp = pb::
+    HttpResponse::MovedPermanently().append_header(("Location", "/")).finish()
+}
+
+pub async fn user_info() -> Result<HttpResponse> {
+    let resp = pb::UserInfoResp{
+        code: 0,
+        msg: "".to_string(),
+        user_id: 0,
+        username: "".to_string(),
+        status: 0,
+        avatar: "".to_string(),
+        linkname: "".to_string(),
+        link_url: "".to_string(),
+        link_desc: "".to_string(),
+        logo_url: "".to_string(),
+        state: false,
+        label: 0,
+        receive_update: false,
+        token: "".to_string(),
+        verify_status: "".to_string()
+    };
+    HttpResponse::Ok().protobuf(resp)
+}
+
+pub async fn edit() -> Result<HttpResponse> {
+    let resp = pb::EditUserInfoRequest{
+        user_id: 0,
+        label: 0,
+        state: false,
+        link_url: "".to_string(),
+        linkname: "".to_string(),
+        link_desc: "".to_string(),
+        receive_update: false,
+        logo_url: "".to_string()
+    };
+    HttpResponse::Ok().protobuf(resp)
+}

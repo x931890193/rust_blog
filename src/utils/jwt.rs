@@ -81,6 +81,6 @@ mod test {
         println!("{:}", token);
 
         let c = verify_jwt(&token);
-        println!("{:?}", c.err())
+        println!("{:?}", c.err());
     }
 }
