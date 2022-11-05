@@ -9,9 +9,10 @@ edition = "2021"
 actix = "0.13.0"
 actix-rt = "*" # 异步测试用
 actix-protobuf = "0.9.0"
-actix-web = "4"
+actix-web = "4.0.0"
 actix-web-actors = "4.1.0"
 async-std = "1.12.0"
+actix-session = "0.4.1"
 captcha = "0.0.9"
 base64 = "0.12.3"
 

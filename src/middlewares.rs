@@ -1,4 +1,5 @@
 use std::future::{ready, Ready};
+use actix_session::{CookieSession, Session};
 
 use actix_web::{
     body::EitherBody,
@@ -139,7 +140,7 @@ impl<S, B> Service<ServiceRequest> for BaseAuthMiddleware<S>
 
 
 
-// middleware 3
+// middleware request
 pub struct Request;
 
 // implement Transform
@@ -177,16 +178,13 @@ impl<S, B> Service<ServiceRequest> for RequestMiddleware<S>
 
     dev::forward_ready!(service);
 
-    fn call(&self, request: ServiceRequest) -> Self::Future {
+    fn call(&self, mut request: ServiceRequest) -> Self::Future {
         // Change this to see the change in outcome in the browser.
         // Usually this boolean would be acquired from a password check or other auth verification.
-        let is_logged_in = false;
         // TODO something
         println!("ssssssssssssss");
-        // Don't forward to `/login` if we are already on `/login`.
-        if !is_logged_in && request.path() != "/login" {
+        if false {
             let (request, _pl) = request.into_parts();
-
             let response = HttpResponse::Found()
                 .insert_header((http::header::LOCATION, "/login"))
                 .finish()

@@ -1,5 +1,11 @@
 use actix_web::{middleware, App, HttpServer};
+use actix_session::CookieSession;
+use std::os;
 use rust_blog::*;
+
+fn test() {
+
+}
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -13,6 +19,9 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .app_data(actix_web::web::Data::new(db::DB_POOL.clone()))
             .app_data(actix_web::web::Data::new(utils::cache::REDIS_POOL.clone()))
+            .wrap(middleware::DefaultHeaders::new().add(("Rust", )))
+            .wrap(CookieSession::signed(&[0; 32]) // <- create cookie based session middleware
+                      .secure(false),)
             .wrap(middleware::Logger::default())
             .wrap(middleware::Logger::default())
             .wrap(middlewares::Request)
