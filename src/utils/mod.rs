@@ -6,3 +6,4 @@ pub mod jwt;
 pub mod mail;
 pub mod qiniu;
 pub mod request;
+pub mod e;

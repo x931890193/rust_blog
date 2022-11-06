@@ -2,7 +2,6 @@ pub mod article;
 pub mod base;
 pub mod category;
 pub mod comment;
-pub mod e;
 pub mod like;
 pub mod links;
 pub mod log;

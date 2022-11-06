@@ -1,9 +1,9 @@
 use actix_protobuf::{ProtoBuf, ProtoBufResponseBuilder as _};
-use actix_web::{web, HttpResponse, Result, http};
+use actix_web::{http, web, HttpResponse, Result};
 use chrono::Local;
 use std::error::Error;
 
-use crate::handlers::e;
+use crate::utils::e;
 use crate::models::wrapper;
 use crate::proto::pb;
 use crate::utils::cache::{self, redis::Commands};
@@ -100,96 +100,96 @@ pub async fn routers() -> Result<HttpResponse> {
                 }),
                 hidden: false,
                 children: vec![
-                    pb::Component{
+                    pb::Component {
                         component: "blog/blog/index".to_string(),
                         path: "".to_string(),
                         name: "index".to_string(),
-                        meta: Some(pb::ComponentMeta{
+                        meta: Some(pb::ComponentMeta {
                             title: "".to_string(),
                             name: "".to_string(),
                             icon: "documentation".to_string(),
                             no_cache: false,
                             affix: false,
-                            active_menu: "".to_string()
+                            active_menu: "".to_string(),
                         }),
                         hidden: true,
-                        children: vec![]
+                        children: vec![],
                     },
-                    pb::Component{
+                    pb::Component {
                         component: "blog/blog/index".to_string(),
                         path: "".to_string(),
                         name: "AddBlog".to_string(),
-                        meta: Some(pb::ComponentMeta{
+                        meta: Some(pb::ComponentMeta {
                             title: "文章管理".to_string(),
                             name: "".to_string(),
                             icon: "documentation".to_string(),
                             no_cache: false,
                             affix: false,
-                            active_menu: "/article/index".to_string()
+                            active_menu: "/article/index".to_string(),
                         }),
                         hidden: false,
-                        children: vec![]
+                        children: vec![],
                     },
-                    pb::Component{
+                    pb::Component {
                         component: "blog/blog/add".to_string(),
                         path: "add".to_string(),
                         name: "BlogAdd".to_string(),
                         meta: None,
                         hidden: true,
-                        children: vec![]
+                        children: vec![],
                     },
-                    pb::Component{
+                    pb::Component {
                         component: "blog/blog/edit".to_string(),
                         path: "edit/*".to_string(),
                         name: "BlogEdit".to_string(),
                         meta: None,
                         hidden: true,
-                        children: vec![]
+                        children: vec![],
                     },
-                    pb::Component{
+                    pb::Component {
                         component: "blog/category/index".to_string(),
                         path: "categories".to_string(),
                         name: "categories".to_string(),
-                        meta: Some(pb::ComponentMeta{
+                        meta: Some(pb::ComponentMeta {
                             title: "分类管理".to_string(),
                             name: "".to_string(),
                             icon: "component".to_string(),
                             no_cache: false,
                             affix: false,
-                            active_menu: "/article/categories".to_string()
+                            active_menu: "/article/categories".to_string(),
                         }),
                         hidden: false,
-                        children: vec![]
+                        children: vec![],
                     },
-                    pb::Component{
+                    pb::Component {
                         component: "blog/comment/index".to_string(),
                         path: "Comments".to_string(),
                         name: "Comments".to_string(),
-                        meta: Some(pb::ComponentMeta{
+                        meta: Some(pb::ComponentMeta {
                             title: "评论管理".to_string(),
                             name: "".to_string(),
                             icon: "message".to_string(),
                             no_cache: false,
                             affix: false,
-                            active_menu: "/article/comments".to_string()
+                            active_menu: "/article/comments".to_string(),
                         }),
                         hidden: false,
-                        children: vec![]
+                        children: vec![],
                     },
-                    pb::Component{
+                    pb::Component {
                         component: "blog/tag/index".to_string(),
                         path: "tags".to_string(),
                         name: "Tags".to_string(),
-                        meta: Some(pb::ComponentMeta{
+                        meta: Some(pb::ComponentMeta {
                             title: "标签管理".to_string(),
                             name: "".to_string(),
                             icon: "code".to_string(),
                             no_cache: false,
                             affix: false,
-                            active_menu: "/article/tags".to_string()
+                            active_menu: "/article/tags".to_string(),
                         }),
                         hidden: false,
-                        children: vec![]
+                        children: vec![],
                     },
                 ],
             },

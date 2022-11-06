@@ -1,5 +1,5 @@
 use crate::db::DB_POOL;
-use crate::handlers::e;
+use crate::utils::e;
 use crate::models::entity::*;
 use crate::utils::crypt;
 use crate::utils::jwt;

@@ -1,5 +1,5 @@
-use std::future::{ready, Ready};
 use actix_session::{CookieSession, Session};
+use std::future::{ready, Ready};
 
 use actix_web::{
     body::EitherBody,
@@ -13,10 +13,10 @@ pub struct Auth;
 
 // implement Transform
 impl<S, B> Transform<S, ServiceRequest> for Auth
-    where
-        S: Service<ServiceRequest, Response = ServiceResponse<B>, Error = Error>,
-        S::Future: 'static,
-        B: 'static,
+where
+    S: Service<ServiceRequest, Response = ServiceResponse<B>, Error = Error>,
+    S::Future: 'static,
+    B: 'static,
 {
     type Response = ServiceResponse<EitherBody<B>>;
     type Error = Error;
@@ -34,10 +34,10 @@ pub struct AuthMiddleware<S> {
 
 // implement Service
 impl<S, B> Service<ServiceRequest> for AuthMiddleware<S>
-    where
-        S: Service<ServiceRequest, Response = ServiceResponse<B>, Error = Error>,
-        S::Future: 'static,
-        B: 'static,
+where
+    S: Service<ServiceRequest, Response = ServiceResponse<B>, Error = Error>,
+    S::Future: 'static,
+    B: 'static,
 {
     type Response = ServiceResponse<EitherBody<B>>;
     type Error = Error;
@@ -78,10 +78,10 @@ pub struct BaseAuth;
 
 // implement Transform
 impl<S, B> Transform<S, ServiceRequest> for BaseAuth
-    where
-        S: Service<ServiceRequest, Response = ServiceResponse<B>, Error = Error>,
-        S::Future: 'static,
-        B: 'static,
+where
+    S: Service<ServiceRequest, Response = ServiceResponse<B>, Error = Error>,
+    S::Future: 'static,
+    B: 'static,
 {
     type Response = ServiceResponse<EitherBody<B>>;
     type Error = Error;
@@ -100,10 +100,10 @@ pub struct BaseAuthMiddleware<S> {
 
 // implement Service
 impl<S, B> Service<ServiceRequest> for BaseAuthMiddleware<S>
-    where
-        S: Service<ServiceRequest, Response = ServiceResponse<B>, Error = Error>,
-        S::Future: 'static,
-        B: 'static,
+where
+    S: Service<ServiceRequest, Response = ServiceResponse<B>, Error = Error>,
+    S::Future: 'static,
+    B: 'static,
 {
     type Response = ServiceResponse<EitherBody<B>>;
     type Error = Error;
@@ -138,17 +138,15 @@ impl<S, B> Service<ServiceRequest> for BaseAuthMiddleware<S>
     }
 }
 
-
-
 // middleware request
 pub struct Request;
 
 // implement Transform
 impl<S, B> Transform<S, ServiceRequest> for Request
-    where
-        S: Service<ServiceRequest, Response = ServiceResponse<B>, Error = Error>,
-        S::Future: 'static,
-        B: 'static,
+where
+    S: Service<ServiceRequest, Response = ServiceResponse<B>, Error = Error>,
+    S::Future: 'static,
+    B: 'static,
 {
     type Response = ServiceResponse<EitherBody<B>>;
     type Error = Error;
@@ -167,10 +165,10 @@ pub struct RequestMiddleware<S> {
 
 // implement Service
 impl<S, B> Service<ServiceRequest> for RequestMiddleware<S>
-    where
-        S: Service<ServiceRequest, Response = ServiceResponse<B>, Error = Error>,
-        S::Future: 'static,
-        B: 'static,
+where
+    S: Service<ServiceRequest, Response = ServiceResponse<B>, Error = Error>,
+    S::Future: 'static,
+    B: 'static,
 {
     type Response = ServiceResponse<EitherBody<B>>;
     type Error = Error;

@@ -18,20 +18,17 @@ pub struct Claims {
     exp: usize,
 }
 
-pub fn generate_jwt(user: User) -> Result<String, jsonwebtoken::errors::ErrorKind> {
+pub fn generate_jwt(user: User) -> Result<String, jsonwebtoken::errors::Error> {
     let expire_time = Local::now().timestamp() + 86400 * 7;
     let claims = Claims {
         user_info: user,
         exp: expire_time as usize,
     };
-    let token = Box::new(
-        encode(
-            &Header::default(),
-            &claims,
-            &EncodingKey::from_secret(JWT_SECRET.as_ref()),
-        )
-        .unwrap(),
-    );
+    let token = Box::new(encode(
+        &Header::default(),
+        &claims,
+        &EncodingKey::from_secret(JWT_SECRET.as_ref()),
+    )?);
     Ok(*token)
 }
 

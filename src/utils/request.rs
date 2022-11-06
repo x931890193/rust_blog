@@ -20,7 +20,7 @@ pub enum ContentType {
     Protobuf(String),
 }
 
-fn get_client(extra_headers: HashMap<String, String>) -> reqwest::Client {
+fn get_client(extra_headers: Option<HashMap<String, String>>) -> reqwest::Client {
     let mut headers_map = header::HeaderMap::new();
     for (k, v) in extra_headers {
         headers_map.insert(
@@ -39,16 +39,18 @@ fn get_client(extra_headers: HashMap<String, String>) -> reqwest::Client {
 
 pub async fn get(
     url: String,
-    params: HashMap<String, String>,
-    extra_headers: HashMap<String, String>,
+    params: Option<HashMap<String, String>>,
+    extra_headers: Option<HashMap<String, String>>,
 ) -> Result<reqwest::Response, Box<dyn Error>> {
     let mut url_with_parameters = url.as_str().to_owned() + "?";
-    for (k, v) in params {
-        url_with_parameters += &format!("{}={}", k, v)
-    }
+    // for (k, v) in &params {
+    //     url_with_parameters += &format!("{}={}", k, v)
+    // }
+    //
+
     let client = get_client(extra_headers);
     let res = client.get(url.clone()).send().await?;
-    let res = res.error_for_status().unwrap();
+    let res = res.error_for_status()?;
     log::info!(
         "request: {}, status_code: {}",
         url.clone().as_str(),
@@ -61,12 +63,12 @@ pub async fn get(
 // data serde_json::json!({k: v})
 pub async fn post(
     url: String,
-    data: serde_json::Value,
-    extra_headers: HashMap<String, String>,
+    data: Option<serde_json::Value>,
+    extra_headers: Option<HashMap<String, String>>,
 ) -> Result<reqwest::Response, Box<dyn Error>> {
     let client = get_client(extra_headers);
     let res = client.post(url.clone()).json(&data).send().await?;
-    let res = res.error_for_status().unwrap();
+    let res = res.error_for_status()?;
     log::error!(
         "request: {}, status_code: {}",
         url.clone().as_str(),
@@ -88,8 +90,8 @@ mod test {
         p.insert("wd".to_string(), "s".to_string());
         let res = get(
             "https://www.baidu.com/s".to_string(),
-            p.clone(),
-            HashMap::new(),
+            None,
+            None,
         );
         println!("{:?}", res.await)
     }
@@ -101,12 +103,12 @@ mod test {
         p.insert("wd".to_string(), "s".to_string());
         let res = post(
             "https://www.baidu.com/s".to_string(),
-            serde_json::json!({
+            Some(serde_json::json!({
                 "title": "Reqwest.rs",
                 "body": "https://docs.rs/reqwest",
                 "userId": 1
-            }),
-            HashMap::new(),
+            })),
+            None,
         );
         println!("{:?}", res.await)
     }
