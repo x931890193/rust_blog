@@ -1,13 +1,13 @@
 use lazy_static::lazy_static;
-use rsa::Hash;
 use std::collections::HashMap;
 use std::io;
+use serde;
 
 use crate::utils::{e, request};
 
 lazy_static! {
-    pub static ref gitHubAccessTokenUrl: String = "https://github.com/login/oauth/access_token";
-    pub static ref githubUserInfoUrl: String = "https://api.github.com/user";
+    pub static ref gitHubAccessTokenUrl: String = "https://github.com/login/oauth/access_token".to_string();
+    pub static ref githubUserInfoUrl: String = "https://api.github.com/user".to_string();
 }
 
 struct AccessTokenGetRequest {
@@ -16,13 +16,16 @@ struct AccessTokenGetRequest {
     code: String,
     redirect_uri: String,
 }
-struct AccessTokenResp {
+
+#[derive(Debug, serde::Serialize, serde::Deserialize)]
+pub struct AccessTokenResp {
     access_token: String,
     scope: String,
     token_type: String,
     redirect_uri: String,
 }
 
+#[derive(Debug, serde::Serialize, serde::Deserialize)]
 struct UserInfo {
     login: String,
     id: i128,
@@ -58,11 +61,9 @@ struct UserInfo {
     updated_at: String,
 }
 
-pub fn get_access_token(code: &str) -> Result<AccessTokenResp, io::Error> {
-    unimplemented!();
-    // TODO
+pub async fn get_access_token(code: &str) -> Result<AccessTokenResp, io::Error> {
     let mut params: HashMap<&str, &str> =
-        HashMap::from([("client_id", "2"), ("client_secret", "4")]);
+        HashMap::from([("client_id", "2"), ("client_secret", "4"), ("code", code), ("redirect_uri", "")]);
     let mut url_parameters = gitHubAccessTokenUrl.to_string() + "?";
     for (k, v) in params {
         url_parameters += &format!("{}={}", k.to_string(), v)
@@ -71,19 +72,43 @@ pub fn get_access_token(code: &str) -> Result<AccessTokenResp, io::Error> {
         url_parameters,
         None,
         Some(HashMap::from([("Accept".to_string(), "application/json".to_string())])),
-    );
+    ).await;
+    match res {
+        Ok(token) => {
+            let token: AccessTokenResp = token.json().await.unwrap();
+            println!("{:?}", token);
+            Ok(token)
+        },
+        Err(err) => {
+            Err(io::Error::new(io::ErrorKind::ConnectionRefused, "error"))
+        }
+    }
 }
 
-pub fn get_user_info(token: &str) -> Result<UserInfo, io::Error> {
-    unimplemented!();
+pub async fn get_user_info(token: &str) -> Result<UserInfo, io::Error> {
     let res = request::get(
         githubUserInfoUrl.to_string(),
         None,
-        Some(HashMap::from(vec![("Authorization".to_string(), format!("Bearer {}", token).to_string())])),
-    );
-    if let Some(user) = serde_json::from_value::<UserInfo>(res) {
-        Ok(user)
-    }else {
-        Box::new(e::BaseError::new("get res"))
+        Some(HashMap::from([("Authorization".to_string(), format!("Bearer {}", token).to_string())])),
+    ).await;
+    match res {
+        Ok(user) => {
+            let user: UserInfo = user.json().await.unwrap();
+            println!("{:?}", user);
+            Ok(user)
+        },
+        Err(err) => {
+            Err(io::Error::new(io::ErrorKind::ConnectionRefused, "error"))
+        }
+    }
+}
+
+
+#[cfg(test)]
+mod test {
+    #[actix_rt::test] // 异步测试 need
+    #[test]
+    async fn test_get() {
+        println!("11111")
     }
 }

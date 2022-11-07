@@ -22,11 +22,13 @@ pub enum ContentType {
 
 fn get_client(extra_headers: Option<HashMap<String, String>>) -> reqwest::Client {
     let mut headers_map = header::HeaderMap::new();
-    for (k, v) in extra_headers {
-        headers_map.insert(
-            header::HeaderName::from_str(k.as_str()).unwrap(),
-            header::HeaderValue::from_str(v.as_str()).unwrap(),
-        );
+    if let Some(headers) = extra_headers {
+        for (k, v) in headers {
+            headers_map.insert(
+                header::HeaderName::from_str(k.as_str()).unwrap(),
+                header::HeaderValue::from_str(v.as_str()).unwrap(),
+            );
+        }
     }
     let client = reqwest::Client::builder()
         .user_agent(USER_AGENT.as_str())

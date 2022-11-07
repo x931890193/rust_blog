@@ -79,7 +79,7 @@ mod test {
 
     #[test]
     fn test_error(){
-        let res = GenResult::Err(Box::new(AuthError::new(""))).unwrap();
-        println!("{}", res.err())
+        // let res = GenResult::Err(Box::new(AuthError::new(""))).unwrap();
+        // println!("{}", res.err())
     }
 }
