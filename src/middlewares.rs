@@ -51,7 +51,8 @@ where
         let is_logged_in = false;
         // TODO something
         // Don't forward to `/login` if we are already on `/login`.
-        if !is_logged_in && request.path() != "/login" {
+        println!("this is AuthMiddleware");
+        if false & !is_logged_in && request.path() != "/login" {
             let (request, _pl) = request.into_parts();
 
             let response = HttpResponse::Found()
@@ -116,8 +117,9 @@ where
         // Usually this boolean would be acquired from a password check or other auth verification.
         let is_logged_in = false;
         // TODO something
+        println!("this is BaseAuthMiddleware");
         // Don't forward to `/login` if we are already on `/login`.
-        if !is_logged_in && request.path() != "/login" {
+        if false & !is_logged_in && request.path() != "/login" {
             let (request, _pl) = request.into_parts();
 
             let response = HttpResponse::Found()
@@ -180,7 +182,7 @@ where
         // Change this to see the change in outcome in the browser.
         // Usually this boolean would be acquired from a password check or other auth verification.
         // TODO something
-        println!("ssssssssssssss");
+        println!("this is RequestMiddleware");
         if false {
             let (request, _pl) = request.into_parts();
             let response = HttpResponse::Found()

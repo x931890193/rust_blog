@@ -6,8 +6,8 @@ use serde;
 use crate::utils::{e, request};
 
 lazy_static! {
-    pub static ref gitHubAccessTokenUrl: String = "https://github.com/login/oauth/access_token".to_string();
-    pub static ref githubUserInfoUrl: String = "https://api.github.com/user".to_string();
+    pub static ref GIT_HUB_ACCESS_TOKEN_URL: String = "https://github.com/login/oauth/access_token".to_string();
+    pub static ref GITHUB_USER_INFO_URL: String = "https://api.github.com/user".to_string();
 }
 
 struct AccessTokenGetRequest {
@@ -64,7 +64,7 @@ struct UserInfo {
 pub async fn get_access_token(code: &str) -> Result<AccessTokenResp, io::Error> {
     let mut params: HashMap<&str, &str> =
         HashMap::from([("client_id", "2"), ("client_secret", "4"), ("code", code), ("redirect_uri", "")]);
-    let mut url_parameters = gitHubAccessTokenUrl.to_string() + "?";
+    let mut url_parameters = GIT_HUB_ACCESS_TOKEN_URL.to_string() + "?";
     for (k, v) in params {
         url_parameters += &format!("{}={}", k.to_string(), v)
     }
@@ -87,7 +87,7 @@ pub async fn get_access_token(code: &str) -> Result<AccessTokenResp, io::Error> 
 
 pub async fn get_user_info(token: &str) -> Result<UserInfo, io::Error> {
     let res = request::get(
-        githubUserInfoUrl.to_string(),
+        GITHUB_USER_INFO_URL.to_string(),
         None,
         Some(HashMap::from([("Authorization".to_string(), format!("Bearer {}", token).to_string())])),
     ).await;
