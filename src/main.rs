@@ -1,5 +1,7 @@
 use actix_session::CookieSession;
 use actix_web::{middleware, App, HttpServer};
+use rustc_version_runtime::version;
+
 use rust_blog::*;
 use std::os;
 
@@ -17,7 +19,7 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .app_data(actix_web::web::Data::new(db::DB_POOL.clone()))
             .app_data(actix_web::web::Data::new(utils::cache::REDIS_POOL.clone()))
-            .wrap(middleware::DefaultHeaders::new().add(("Rust", "1.64")))
+            .wrap(middleware::DefaultHeaders::new().add(("Rust-Version", version().to_string())))
             .wrap(middleware::Logger::default())
             .wrap(middlewares::Request)
             .wrap(middlewares::BaseAuth)
