@@ -6,7 +6,7 @@ use serde;
 use crate::utils::{e, request};
 
 lazy_static! {
-    pub static ref GIT_HUB_ACCESS_TOKEN_URL: String = "https://github.com/login/oauth/access_token".to_string();
+    pub static ref GITHUB_ACCESS_TOKEN_URL: String = "https://github.com/login/oauth/access_token".to_string();
     pub static ref GITHUB_USER_INFO_URL: String = "https://api.github.com/user".to_string();
 }
 
@@ -64,7 +64,7 @@ struct UserInfo {
 pub async fn get_access_token(code: &str) -> Result<AccessTokenResp, io::Error> {
     let mut params: HashMap<&str, &str> =
         HashMap::from([("client_id", "2"), ("client_secret", "4"), ("code", code), ("redirect_uri", "")]);
-    let mut url_parameters = GIT_HUB_ACCESS_TOKEN_URL.to_string() + "?";
+    let mut url_parameters = GITHUB_ACCESS_TOKEN_URL.to_string() + "?";
     for (k, v) in params {
         url_parameters += &format!("{}={}", k.to_string(), v)
     }

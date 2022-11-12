@@ -3,6 +3,7 @@ extern crate r2d2;
 pub use redis;
 
 use lazy_static::lazy_static;
+use crate::config::CONFIGURATION;
 
 // for request binding
 pub type RedisPool = r2d2::Pool<redis::Client>;
@@ -18,7 +19,7 @@ pub fn create_redis_pool(redis_url: &str) -> RedisPool {
 lazy_static! {
     // for anywhere to use
     pub static ref REDIS_POOL: RedisPool  = {
-        let redis_url = "redis://127.0.0.1/1";
+        let redis_url = format!("redis://{}/{}", CONFIGURATION.cache.host, CONFIGURATION.cache.db);
         let pool = create_redis_pool(&redis_url);
         pool
     };

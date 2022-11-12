@@ -5,3 +5,4 @@ pub mod models;
 pub mod proto;
 pub mod routers;
 pub mod utils;
+pub mod config;
