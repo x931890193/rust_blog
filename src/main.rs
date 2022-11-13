@@ -1,9 +1,7 @@
-use std::fmt::format;
 use actix_web::{middleware, App, HttpServer};
 use rustc_version_runtime::version;
 
 use rust_blog::*;
-use std::os;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {

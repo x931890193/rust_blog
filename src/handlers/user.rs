@@ -57,7 +57,7 @@ pub async fn admin_login(req: ProtoBuf<pb::LoginAdminRequest>) -> Result<HttpRes
     HttpResponse::Ok().protobuf(resp)
 }
 
-pub async fn admin_info(req: ProtoBuf<pb::AdminInfoResp>) -> Result<HttpResponse> {
+pub async fn admin_info() -> Result<HttpResponse> {
     let resp = pb::AdminInfoResp {
         name: "".to_string(),
         avatar: "".to_string(),

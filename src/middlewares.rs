@@ -1,5 +1,6 @@
 use actix_session::{CookieSession, Session};
 use std::future::{ready, Ready};
+use crate::utils::cache;
 
 use actix_web::{
     body::EitherBody,
@@ -7,6 +8,7 @@ use actix_web::{
     http, Error, HttpResponse,
 };
 use futures_util::future::LocalBoxFuture;
+use redis::Commands;
 
 // middleware 1
 pub struct Auth;
@@ -116,7 +118,29 @@ where
         // Change this to see the change in outcome in the browser.
         // Usually this boolean would be acquired from a password check or other auth verification.
         let is_logged_in = false;
-        // TODO something
+        // 洗洗睡了
+        // req.extensions_mut().insert(Msg("Hello from Middleware!".to_owned()));
+        // set user info in it  get msg: Option<ReqData<Msg>>
+        log::info!("request is passing through BaseAuthMiddleware");
+        let mut set_user = false;
+        if let Some(token) = request.headers().get("Authorization") {
+            if let Ok(value) = token.to_str() {
+                let token_slice: Vec<&str> = value.split(" ").collect();
+                if token_slice.len() != 2 {
+                    setUser = false
+                }else {
+                    let token = token_slice[1];
+                    let mut redis_client = cache::REDIS_POOL.get().unwrap();
+                    let exist: bool = redis_client.exists(token).unwrap();
+                    if exist {
+                        set_user = true
+                    }
+
+                }
+                println!("{:?}", token_slice)
+            }
+            println!("{:?}", token);
+        }
         println!("this is BaseAuthMiddleware");
         // Don't forward to `/login` if we are already on `/login`.
         if false & !is_logged_in && request.path() != "/login" {
