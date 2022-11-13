@@ -127,7 +127,7 @@ where
             if let Ok(value) = token.to_str() {
                 let token_slice: Vec<&str> = value.split(" ").collect();
                 if token_slice.len() != 2 {
-                    setUser = false
+                    set_user = false
                 }else {
                     let token = token_slice[1];
                     let mut redis_client = cache::REDIS_POOL.get().unwrap();
