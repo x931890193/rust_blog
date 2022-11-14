@@ -14,7 +14,7 @@ lazy_static::lazy_static!(
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Claims {
-    user_info: User,
+    pub user_info: User,
     exp: usize,
 }
 
@@ -41,7 +41,7 @@ pub fn verify_jwt(token: &str) -> Result<Claims, jsonwebtoken::errors::Error> {
     )
     .unwrap();
     let res = &claims.claims;
-    if res.exp > Local::now().timestamp() as usize {
+    if res.exp < Local::now().timestamp() as usize {
         let err =
             jsonwebtoken::errors::Error::from(jsonwebtoken::errors::ErrorKind::ExpiredSignature);
         return Err(err);
@@ -76,8 +76,8 @@ mod test {
         };
         let token = generate_jwt(u).unwrap();
         println!("{:}", token);
-
+        let token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2luZm8iOnsiaWQiOjEsImNyZWF0ZWRfYXQiOiIyMDIyLTA4LTE1IDE5OjU5OjU5LjU0MyIsInVwZGF0ZWRfYXQiOiIyMDIyLTEwLTEzIDIxOjI2OjMwLjkwNiIsImlzX2RlbGV0ZSI6ZmFsc2UsInVzZXJfbmFtZSI6InNhaW50IiwicGFzc3dvcmQiOiI2MzFlNGMyNzEyNzM4OWVlMGYzOGJmMDBiMjU5ZDZhMjYxZjFhNGNlNzhiMWJmYmMwNmViMDY4OTU1YjVjZWE2IiwiYXZhdGFyIjoiaHR0cHM6Ly9hdmF0YXJzLmdpdGh1YnVzZXJjb250ZW50LmNvbS91LzI0NjMyNTc0P3Y9NCIsImxhYmVsIjo1LCJlbWFpbCI6InlzdWRxZnNAMTYzLmNvbSIsImdpdGh1Yl9pZCI6MjQ2MzI1NzQsImdpdGh1Yl91cmwiOiJodHRwczovL2FwaS5naXRodWIuY29tL3VzZXJzL3g5MzE4OTAxOTMiLCJpc19hZG1pbiI6dHJ1ZSwicmVjZWl2ZV91cGRhdGUiOnRydWUsImxhc3RfbG9naW4iOiIyMDIyLTEwLTEzIDIxOjI2OjMwLjg5NiJ9LCJleHAiOjE2NjkwMTc3NTN9.jy0mfp5GpK4nyl-ybraxH1uitjg5UAji-RVZjA-HHmU";
         let c = verify_jwt(&token);
-        println!("{:?}", c.err());
+        println!("{:?}", c.unwrap().user_info);
     }
 }

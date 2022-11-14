@@ -2,6 +2,9 @@ use actix_protobuf::{ProtoBuf, ProtoBufResponseBuilder as _};
 use actix_web::{http, web, HttpResponse, Result};
 use chrono::Local;
 use std::error::Error;
+use actix_web::web::ReqData;
+use serde::de::Unexpected::Str;
+use crate::models::entity::User;
 
 use crate::utils::e;
 use crate::models::wrapper;
@@ -57,8 +60,8 @@ pub async fn admin_login(req: ProtoBuf<pb::LoginAdminRequest>) -> Result<HttpRes
     HttpResponse::Ok().protobuf(resp)
 }
 
-pub async fn admin_info() -> Result<HttpResponse> {
-    let resp = pb::AdminInfoResp {
+pub async fn admin_info(user: Option<ReqData<Option<User>>>) -> Result<HttpResponse> {
+    let mut resp = pb::AdminInfoResp {
         name: "".to_string(),
         avatar: "".to_string(),
         job: "".to_string(),
@@ -78,6 +81,11 @@ pub async fn admin_info() -> Result<HttpResponse> {
         code: 0,
         msg: "".to_string(),
     };
+    if let Some(req_data) = user {
+        let user = req_data.as_ref().unwrap();
+        resp.name = String::from(user.user_name.as_ref().unwrap());
+        resp.avatar = String::from(user.avatar.as_ref().unwrap())
+    }
     HttpResponse::Ok().protobuf(resp)
 }
 

@@ -1,14 +1,12 @@
 use actix_session::{CookieSession, Session};
 use std::future::{ready, Ready};
 use crate::utils::cache;
+use crate::utils::jwt;
 
-use actix_web::{
-    body::EitherBody,
-    dev::{self, Service, ServiceRequest, ServiceResponse, Transform},
-    http, Error, HttpResponse,
-};
+use actix_web::{body::EitherBody, dev::{self, Service, ServiceRequest, ServiceResponse, Transform}, http, Error, HttpResponse, HttpMessage};
 use futures_util::future::LocalBoxFuture;
-use redis::Commands;
+use serde::de::Unexpected::Option;
+use crate::models::entity::User;
 
 // middleware 1
 pub struct Auth;
@@ -118,28 +116,22 @@ where
         // Change this to see the change in outcome in the browser.
         // Usually this boolean would be acquired from a password check or other auth verification.
         let is_logged_in = false;
-        // 洗洗睡了
         // req.extensions_mut().insert(Msg("Hello from Middleware!".to_owned()));
         // set user info in it  get msg: Option<ReqData<Msg>>
         log::info!("request is passing through BaseAuthMiddleware");
-        let mut set_user = false;
         if let Some(token) = request.headers().get("Authorization") {
             if let Ok(value) = token.to_str() {
                 let token_slice: Vec<&str> = value.split(" ").collect();
-                if token_slice.len() != 2 {
-                    set_user = false
-                }else {
+                if token_slice.len() == 2 {
                     let token = token_slice[1];
-                    let mut redis_client = cache::REDIS_POOL.get().unwrap();
-                    let exist: bool = redis_client.exists(token).unwrap();
-                    if exist {
-                        set_user = true
-                    }
-
-                }
-                println!("{:?}", token_slice)
+                    if let Ok(c) =  jwt::verify_jwt(token) {
+                        println!("{:?}", c);
+                        request.extensions_mut().insert(Some(c.user_info.to_owned()))
+                    } else {
+                        request.extensions_mut().insert(None)
+                    };
+                };
             }
-            println!("{:?}", token);
         }
         println!("this is BaseAuthMiddleware");
         // Don't forward to `/login` if we are already on `/login`.
