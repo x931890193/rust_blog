@@ -1,4 +1,6 @@
 use actix_web::{middleware, App, HttpServer};
+use actix_rt::{spawn, time};
+use std::time::Duration;
 use rustc_version_runtime::version;
 
 use rust_blog::*;
@@ -12,6 +14,15 @@ async fn main() -> std::io::Result<()> {
 
     let bind = format!("{}:{}", config::CONFIGURATION.server.host, config::CONFIGURATION.server.port);
     log::info!("{}", format!("starting HTTP server at http://{}", bind));
+    // crontab task
+    spawn(async move {
+        let mut interval = time::interval(Duration::from_secs(10));
+        loop {
+            interval.tick().await;
+            println!("crontab task running！")
+        }
+    });
+
     HttpServer::new(move || {
         App::new()
             .app_data(actix_web::web::Data::new(db::DB_POOL.clone()))
