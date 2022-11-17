@@ -14,7 +14,7 @@ pub fn config(cfg: &mut ServiceConfig) {
                 .service(r("/login").route(post().to(user::admin_login)))
                 .service(r("/info").route(get().to(user::admin_info)))
                 .service(r("/routers").route(get().to(user::routers)))
-                .service(r("/logout").route(get().to(user::login_out)))
+                .service(r("/logout").route(post().to(user::login_out)))
                 .service(r("/article/add").route(get().to(base::base_resp)))
                 .service(r("/article/:id").route(get().to(base::base_resp)))
                 .service(r("/article/:id").route(get().to(base::base_resp)))

@@ -115,7 +115,7 @@ where
     fn call(&self, request: ServiceRequest) -> Self::Future {
         // Change this to see the change in outcome in the browser.
         // Usually this boolean would be acquired from a password check or other auth verification.
-        let is_logged_in = false;
+        let mut is_logged_in = false;
         // req.extensions_mut().insert(Msg("Hello from Middleware!".to_owned()));
         // set user info in it  get msg: Option<ReqData<Msg>>
         log::info!("request is passing through BaseAuthMiddleware");
@@ -125,7 +125,7 @@ where
                 if token_slice.len() == 2 {
                     let token = token_slice[1];
                     if let Ok(c) =  jwt::verify_jwt(token) {
-                        println!("{:?}", c);
+                        is_logged_in = true;
                         request.extensions_mut().insert(Some(c.user_info.to_owned()))
                     } else {
                         request.extensions_mut().insert(None)
@@ -134,21 +134,28 @@ where
             }
         }
         println!("this is BaseAuthMiddleware");
-        // Don't forward to `/login` if we are already on `/login`.
-        if false & !is_logged_in && request.path() != "/login" {
-            let (request, _pl) = request.into_parts();
-
-            let response = HttpResponse::Found()
-                .insert_header((http::header::LOCATION, "/login"))
-                .finish()
-                // constructed responses map to "right" body
-                .map_into_right_body();
-
-            return Box::pin(async { Ok(ServiceResponse::new(request, response)) });
+        if !is_logged_in {
+            match Some(request.path()) {
+                // check is need login
+                Some(path) => {
+                    if path.starts_with("/admin") {
+                        if path == String::from("/admin/generate") || path == String::from("/admin/captcha") || path == String::from("/admin/login") {
+                            log::info!("ignore this {}", path);
+                        } else {
+                            let (request, _pl) = request.into_parts();
+                            let response = HttpResponse::Unauthorized()
+                                .finish()
+                                // constructed responses map to "right" body
+                                .map_into_right_body();
+                            return Box::pin(async { Ok(ServiceResponse::new(request, response)) });
+                        }
+                    }
+                }
+                _ => {}
+            }
         }
 
         let res = self.service.call(request);
-
         Box::pin(async move {
             // forwarded responses map to "left" body
             res.await.map(ServiceResponse::map_into_left_body)

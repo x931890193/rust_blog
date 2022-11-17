@@ -1,5 +1,5 @@
 use actix_protobuf::{ProtoBuf, ProtoBufResponseBuilder as _};
-use actix_web::{http, web, HttpResponse, Result};
+use actix_web::{http, web, HttpRequest, HttpResponse, Result};
 use chrono::Local;
 use std::error::Error;
 use actix_web::web::ReqData;
@@ -556,7 +556,20 @@ pub async fn routers() -> Result<HttpResponse> {
     HttpResponse::Ok().protobuf(resp)
 }
 
-pub async fn login_out() -> Result<HttpResponse> {
+pub async fn login_out(req: HttpRequest) -> Result<HttpResponse> {
+    let cookie_name = "blog-token";
+    let mut redis_client = cache::REDIS_POOL.get().unwrap();
+    if let Some(cookie) = req.cookie(cookie_name) {
+        redis_client.del::<&str, i32>(cookie.value()).unwrap();
+    }
+    if let Some(headers) = req.headers().get("authorization") {
+        if let Ok(token) =  headers.to_str() {
+            let token_slice: Vec<&str> = token.split(" ").collect();
+            if token_slice.len() == 2 {
+                redis_client.del::<&str, i32>(token_slice[1]).unwrap();
+            }
+        }
+    }
     let resp = pb::BaseResp {
         code: 0,
         msg: "".to_string(),
