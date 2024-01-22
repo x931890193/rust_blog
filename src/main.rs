@@ -13,7 +13,7 @@ async fn main() -> std::io::Result<()> {
     let _ = db::create_db_pool_rbatis(&db_url);
 
     let address = format!("{}:{}", config::CONFIGURATION.server.host, config::CONFIGURATION.server.port);
-    log::info!("{}", format!("starting HTTP server at http://{}", bind));
+    log::info!("{}", format!("starting HTTP server at http://{}", address));
     // crontab task
     spawn(async move {
         let mut interval = time::interval(Duration::from_secs(10));
