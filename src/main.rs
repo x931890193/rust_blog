@@ -9,7 +9,7 @@ use rust_blog::*;
 async fn main() -> std::io::Result<()> {
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("debug"));
 
-    let db_url = "mysql://root:flzx3qc@127.0.0.1:3306/blog";
+    let db_url = "mysql://root:xxxx@127.0.0.1:3306/blog";
     let _ = db::create_db_pool_rbatis(&db_url);
 
     let address = format!("{}:{}", config::CONFIGURATION.server.host, config::CONFIGURATION.server.port);
