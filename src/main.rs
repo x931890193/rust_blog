@@ -12,7 +12,7 @@ async fn main() -> std::io::Result<()> {
     let db_url = "mysql://root:flzx3qc@127.0.0.1:3306/blog";
     let _ = db::create_db_pool_rbatis(&db_url);
 
-    let bind = format!("{}:{}", config::CONFIGURATION.server.host, config::CONFIGURATION.server.port);
+    let address = format!("{}:{}", config::CONFIGURATION.server.host, config::CONFIGURATION.server.port);
     log::info!("{}", format!("starting HTTP server at http://{}", bind));
     // crontab task
     spawn(async move {
@@ -33,7 +33,7 @@ async fn main() -> std::io::Result<()> {
             .wrap(middlewares::BaseAuth)
             .configure(routers::config)
     })
-    .bind(&bind)?
+    .bind(&address)?
     .run()
     .await
 }
